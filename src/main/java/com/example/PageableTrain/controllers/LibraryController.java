@@ -8,6 +8,9 @@ import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -25,9 +28,10 @@ public class LibraryController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<Book>> getAllBooks(@RequestParam(defaultValue = "0") int page,
                                                   @RequestParam(defaultValue = "10") int size,
-                                                  @RequestParam(defaultValue = "id") String sortField,
-                                                  @RequestParam(defaultValue = "ASC") String sortOrder) {
-        return ResponseEntity.ok(libraryService.getLibrary(page, size, sortField, sortOrder));
+                                                  @RequestParam(defaultValue = "id") String sortField) {
+        Sort sort = Sort.by(sortField);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return ResponseEntity.ok(libraryService.getLibrary(pageable));
     }
 
     @GetMapping(value = "/{bookId}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -42,11 +46,11 @@ public class LibraryController {
         return ResponseEntity.ok(libraryService.createBook(bookDTO));
     }
 
-        @PutMapping(value = "/edit/{bookId}", produces = MediaType.APPLICATION_JSON_VALUE)
-        public ResponseEntity<Book> editBook(@PathVariable(name = "bookId") Long bookId,
-                                             @RequestBody @NotBlank(message = "Book name cannot be empty") String bookName) {
-            return ResponseEntity.ok(libraryService.editBook(bookId, bookName));
-        }
+    @PutMapping(value = "/edit/{bookId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Book> editBook(@PathVariable(name = "bookId") Long bookId,
+                                         @RequestBody @NotBlank(message = "Book name cannot be empty") String bookName) {
+        return ResponseEntity.ok(libraryService.editBook(bookId, bookName));
+    }
 
     @DeleteMapping(value = "/delete/{bookId}")
     public ResponseEntity<String> deleteBook(@PathVariable(name = "bookId") Long bookId) {

@@ -11,9 +11,7 @@ import com.example.PageableTrain.repositories.LibraryRepository;
 import jakarta.persistence.LockModeType;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 
@@ -60,16 +58,7 @@ public class LibraryService {
         return authors.stream().anyMatch(author -> author.getName().equals(name));
     }
 
-    public Page<Book> getLibrary(int page, int size, String sortField, String orderField) {
-        Sort sort = null;
-        Pageable pageable = null;
-        if (orderField.equals("DESC")) {
-            sort = Sort.by(sortField).descending();
-            pageable = PageRequest.of(page, size, sort);
-            return libraryRepository.findAll(pageable);
-        }
-        sort = Sort.by(sortField).ascending();
-        pageable = PageRequest.of(page, size, sort);
+    public Page<Book> getLibrary(Pageable pageable) {
         return libraryRepository.findAll(pageable);
     }
 

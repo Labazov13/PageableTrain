@@ -39,7 +39,7 @@ class LibraryControllerTest {
         books.add(new Book(2L, "Book 2", new Author(1L, "Peter")));
         books.add(new Book(3L, "Book 3", new Author(1L, "Peter")));
         Page<Book> page = new PageImpl<>(books);
-        when(libraryService.getLibrary(anyInt(), anyInt(), anyString(), anyString())).thenReturn(page);
+       // when(libraryService.getLibrary(anyInt(), anyInt(), anyString(), anyString())).thenReturn(page);
         mockMvc.perform(get("/api/books").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content", hasSize(3)))
