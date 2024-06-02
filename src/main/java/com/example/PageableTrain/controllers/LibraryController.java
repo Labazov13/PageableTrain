@@ -26,11 +26,7 @@ public class LibraryController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<Book>> getAllBooks(@RequestParam(defaultValue = "0") int page,
-                                                  @RequestParam(defaultValue = "10") int size,
-                                                  @RequestParam(defaultValue = "id") String sortField) {
-        Sort sort = Sort.by(sortField);
-        Pageable pageable = PageRequest.of(page, size, sort);
+    public ResponseEntity<Page<Book>> getAllBooks(Pageable pageable) {
         return ResponseEntity.ok(libraryService.getLibrary(pageable));
     }
 
